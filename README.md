@@ -52,7 +52,7 @@ Participation, Literacy Rate, Net Migration, School Enrollment,
 
 ## <img src="README_files/figure-gfm/visualization_num1-1.png" style="display: block; margin: auto;" />
 
-<img src="README_files/figure-gfm/visualization_num2-1.png" style="display: block; margin: auto;" />
+## <img src="README_files/figure-gfm/visualization_num2-1.png" style="display: block; margin: auto;" />
 
 ## References
 
