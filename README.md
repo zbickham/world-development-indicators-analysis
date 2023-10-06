@@ -37,6 +37,9 @@ with data for many indicators going back more than 50 years.
 
 ## Hypotheses
 
+1.  If a country spends more on healthcare, then their population will
+    live healthier lives.
+
 ## References
 
 The following is a link to The World Bank DataBank:
