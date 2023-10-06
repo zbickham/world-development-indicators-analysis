@@ -1,7 +1,7 @@
 World Development Indicators
 ================
-Brandon Akinseye, Zeke Bickham, Federico Garcia, Carlos Gonzalez,
-Gabriel Gray, Kevin Yu
+Brandon Akinseye, Zeke Bickham, Freddy Garcia, Carlos Gonzalez, Gabriel
+Gray, Kevin Yu
 2023-10-05
 
 ## Project Description

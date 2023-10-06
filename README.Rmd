@@ -1,6 +1,6 @@
 ---
 title: "World Development Indicators"
-author: "Brandon Akinseye, Zeke Bickham, Federico Garcia, Carlos Gonzalez, Gabriel Gray, Kevin Yu"
+author: "Brandon Akinseye, Zeke Bickham, Freddy Garcia, Carlos Gonzalez, Gabriel Gray, Kevin Yu"
 date: "`r Sys.Date()`"
 output: github_document
 ---
