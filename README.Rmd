@@ -31,7 +31,7 @@ library(readr)
 library(tidyverse)
 library(dplyr)
 
-wdi_data <-read_csv("/stor/home/jzb284/SDS 322E/final_project/Project_Data_1.csv", show_col_types = FALSE)
+wdi_data <-read_csv("~/SDS 322E/final_project/Project_Data_1.csv", show_col_types = FALSE)
 
 wdi_data %>%
   filter(`Time` == "2015", `GDP per capita (current US$) [NY.GDP.PCAP.CD]` != "..") %>%
