@@ -5,8 +5,11 @@ date: "`r Sys.Date()`"
 output: github_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, eval = TRUE,  
+                      warning = FALSE, message = FALSE, 
+                      fig.align = "center",
+                      R.options = list(max.print=100))
 ```
 
 ## Project Description
@@ -23,7 +26,7 @@ The World Bank DataBank contains time series data on many different topics for e
 
 ## Visualizations
 
-```{r Project_Data_1}
+```{r visualization_num1}
 library(readr)
 library(tidyverse)
 library(dplyr)
@@ -38,7 +41,9 @@ wdi_data %>%
   xlab("GDP per Capita (current USD)") +
   ylab("Count") +
   ggtitle("Distribution of GDP per Capita for Countries in 2015")
-
+```
+---
+```{r visualization_num2}
 wdi_data %>%
   filter(`Time` == "2018",
          `Life expectancy at birth, total (years) [SP.DYN.LE00.IN]` != "..",

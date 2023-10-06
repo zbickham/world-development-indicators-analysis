@@ -31,58 +31,9 @@ with data for many indicators going back more than 50 years.
 
 ## Visualizations
 
-``` r
-library(readr)
-library(tidyverse)
-```
+## <img src="README_files/figure-gfm/visualization_num1-1.png" style="display: block; margin: auto;" />
 
-    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-    ## ✔ dplyr     1.1.2     ✔ purrr     1.0.2
-    ## ✔ forcats   1.0.0     ✔ stringr   1.5.0
-    ## ✔ ggplot2   3.4.3     ✔ tibble    3.2.1
-    ## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-
-``` r
-library(dplyr)
-
-wdi_data <-read_csv("/stor/home/jzb284/SDS 322E/Project_Data_1.csv", show_col_types = FALSE)
-
-wdi_data %>%
-  filter(`Time` == "2015", `GDP per capita (current US$) [NY.GDP.PCAP.CD]` != "..") %>%
-  mutate(GDPperCapita = as.numeric(`GDP per capita (current US$) [NY.GDP.PCAP.CD]`)) %>%
-  ggplot(aes(x = GDPperCapita)) +
-  geom_histogram() +
-  xlab("GDP per Capita (current USD)") +
-  ylab("Count") +
-  ggtitle("Distribution of GDP per Capita for Countries in 2015")
-```
-
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
-![](README_files/figure-gfm/Project_Data_1-1.png)<!-- -->
-
-``` r
-wdi_data %>%
-  filter(`Time` == "2018",
-         `Life expectancy at birth, total (years) [SP.DYN.LE00.IN]` != "..",
-         `Current health expenditure (% of GDP) [SH.XPD.CHEX.GD.ZS]` != "..") %>%
-  mutate(LifeExpectancy = as.numeric(`Life expectancy at birth, total (years) [SP.DYN.LE00.IN]`),
-         HealthExpend = as.numeric(`Current health expenditure (% of GDP) [SH.XPD.CHEX.GD.ZS]`)) %>%
-  ggplot(aes(x = HealthExpend, y = LifeExpectancy)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  xlab("Current Health Expenditure (% of GDP)") +
-  ylab("Life Expectancy at Birth (years)") +
-  ggtitle("Life Expectancy versus Health Expenditure for Various Countries in 2018")
-```
-
-    ## `geom_smooth()` using formula = 'y ~ x'
-
-![](README_files/figure-gfm/Project_Data_1-2.png)<!-- -->
+<img src="README_files/figure-gfm/visualization_num2-1.png" style="display: block; margin: auto;" />
 
 ## Hypotheses
 
