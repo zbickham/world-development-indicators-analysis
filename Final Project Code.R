@@ -9,6 +9,7 @@ library(ggmap)
 # Data Cleaning -----------------------------------------------------------
 
 wdi_data <- as_tibble(SDS_322E_Final_Project_Data)
+wdi_regions <- as_tibble(SDS_322E_Final_Project_Region_Data)
 
 wdi_data <- wdi_data %>% 
   rename(
@@ -36,6 +37,35 @@ wdi_data <- wdi_data %>%
   filter(!is.na(country)) %>%
   mutate(fertility_rate = as.numeric(fertility_rate),
          population = as.numeric(population))
+
+wdi_regions <- wdi_regions %>% 
+  rename(
+    time = `Time`,
+    country = `Country Name`,
+    country_code = `Country Code`,
+    population = `Population, total [SP.POP.TOTL]`,
+    gdp_per_capita = `GDP per capita, PPP (current international $) [NY.GDP.PCAP.PP.CD]`,
+    gni_per_capita = `GNI per capita, PPP (current international $) [NY.GNP.PCAP.PP.CD]`,
+    death_rate = `Death rate, crude (per 1,000 people) [SP.DYN.CDRT.IN]`,
+    birth_rate = `Birth rate, crude (per 1,000 people) [SP.DYN.CBRT.IN]`,
+    fertility_rate = `Fertility rate, total (births per woman) [SP.DYN.TFRT.IN]`,
+    life_expectancy = `Life expectancy at birth, total (years) [SP.DYN.LE00.IN]`,
+    water = `People using at least basic drinking water services (% of population) [SH.H2O.BASW.ZS]`,
+    sanitation = `People using at least basic sanitation services (% of population) [SH.STA.BASS.ZS]`,
+    literacy_rate = `Literacy rate, adult total (% of people ages 15 and above) [SE.ADT.LITR.ZS]`,
+    poverty_gap = `Poverty gap at $2.15 a day (2017 PPP) (%) [SI.POV.GAPS]`,
+    poverty_national = `Poverty headcount ratio at national poverty lines (% of population) [SI.POV.NAHC]`,
+    electricity = `Access to electricity (% of population) [EG.ELC.ACCS.ZS]`,
+    co2 = `CO2 emissions (metric tons per capita) [EN.ATM.CO2E.PC]`,
+    gender_equality = `CPIA gender equality rating (1=low to 6=high) [IQ.CPA.GNDR.XQ]`,
+    undernourishment = `Prevalence of undernourishment (% of population) [SN.ITK.DEFC.ZS]`,
+    mortality_rate = `Mortality rate, infant (per 1,000 live births) [SP.DYN.IMRT.IN]`
+  ) %>%
+  filter(!is.na(country)) %>%
+  mutate(death_rate = as.numeric(death_rate),
+         birth_rate = as.numeric(birth_rate), 
+         fertility_rate = as.numeric(fertility_rate),
+         life_expectancy = as.numeric(life_expectancy))
 
 
 # Correlation Heatmap -----------------------------------------------------
@@ -240,3 +270,42 @@ wdi_data %>%
   filter(time == 2022) %>%
   ggplot(aes(gdp_per_capita)) +
   geom_histogram()
+
+wdi_regions %>%
+  filter(country != "World") %>%
+  # Color by region
+  ggplot(aes(x = sanitation, y = water, color = country)) +
+  geom_point() +
+  # Add a regression trend line
+  geom_smooth(method = "lm") +
+  # Add labels
+  xlab("People Using at Least Basic Sanitation Services (% of population)") +
+  ylab("People Using at Least Basic Drinking Water Services (% of population)") +
+  ggtitle("Access to Drinking Water vs Sanitation")
+
+wdi_regions %>%
+  filter(country != "World") %>%
+  # Color by region
+  ggplot(aes(x = time, y = population, color = country)) +
+  geom_point() +
+  # Add a regression trend line
+  geom_smooth(method = "lm") +
+  # Add labels
+  xlab("Year") +
+  ylab("Population") +
+  labs(color = "Region") +
+  ggtitle("Population Over Time")
+
+wdi_regions %>%
+  filter(country != "World") %>%
+  # Color by region
+  ggplot(aes(x = undernourishment, y = death_rate, color = country)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+wdi_regions %>%
+  filter(country != "World") %>%
+  drop_na(poverty_gap) %>%
+  ggplot(aes(x = time, y = poverty_gap)) +
+  geom_line() +
+  facet_wrap(~country)
