@@ -73,12 +73,33 @@ wdi_regions <- wdi_regions %>%
 # Create wdi correlation matrix
 wdi_data_cor <- wdi_data %>%
   as.data.frame() %>%
-  filter(time == 2018) %>%
+  filter(time == 2019) %>%
   select(-c(time, country_code, population)) %>%
   remove_rownames %>%
   column_to_rownames(var="country")
 
 cormat <- cor(wdi_data_cor, use="pairwise.complete.obs")
+
+for(row in 1:nrow(cormat)) {
+  positive_sum = 0
+  negative_sum = 0
+  positive_count = 0
+  negative_count = 0
+  for(col in 1:ncol(cormat)) {
+    if (cormat[row, col] > 0 & cormat[row, col] != 1) {
+      positive_sum = positive_sum + cormat[row, col]
+      positive_count = positive_count + 1
+    } else if (cormat[row, col] < 0) {
+      negative_sum = negative_sum + cormat[row, col]
+      negative_count = negative_count + 1
+    }
+  }
+  positive_avg = positive_sum / positive_count
+  negative_avg = negative_sum / negative_count
+  print(paste("The positive average for row", row, "is", positive_avg))
+  print(paste("The negative average for row", row, "is", negative_avg))
+  
+}
 
 # Tidy the data
 tidycor <- cormat %>%
@@ -96,7 +117,7 @@ tidycor %>%
   geom_text(aes(label = round(correlation, 2)),
             color = "black", size = 2) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(title = "Correlation Heatmap of WDI in 2018",
+  labs(title = "Correlation Heatmap of World Development Indicators in 2019",
        x = "variables",
        y = "variables") + 
   coord_fixed() 
@@ -117,16 +138,16 @@ compute_proportion <- function(x) {
 }
 
 # apply NA functions to every column in `wdi_data`
-wdi_na_2018 <- wdi_data %>%
-  filter(time == 2018) %>%
+wdi_na_2019 <- wdi_data %>%
+  filter(time == 2019) %>%
   summarize_all(count_missing)
 
 wdi_data_pam <- wdi_data %>%
-  filter(time == 2018) %>%
-  mutate_at(c("population",  "gdp_per_capita", "gni_per_capita",
+  filter(time == 2019) %>%
+  mutate_at(c("gdp_per_capita", "gni_per_capita",
               "death_rate", "life_expectancy", "water",
               "sanitation", "electricity", "co2", "mortality_rate"), log10) %>%
-  select('country', "population",  "gdp_per_capita",
+  select('country', "gdp_per_capita",
          "gni_per_capita", "death_rate", "birth_rate",
          "fertility_rate", "life_expectancy", "water",
          "sanitation", "electricity", "co2", "mortality_rate") %>%
@@ -165,7 +186,7 @@ library(GGally)
 # Plot pairwise clusters
 wdi_data_pam %>%
   mutate(cluster = as.factor(wdi_pam$clustering)) %>%
-  ggpairs(columns = c("population",  "gdp_per_capita", "gni_per_capita",
+  ggpairs(columns = c("gdp_per_capita", "gni_per_capita",
                       "death_rate", "birth_rate", "fertility_rate",
                       "life_expectancy", "water", "sanitation",
                       "electricity", "co2", "mortality_rate"),
@@ -179,7 +200,7 @@ mapWorld <- map_data("world")
 
 # check if information from `wdi_data` is not contained in `mapWorld`
 wdi_data %>% 
-  filter(time == 2018) %>%
+  filter(time == 2019) %>%
   anti_join(mapWorld, by = c("country" = "region")) %>%
   select(country) %>%
   print(n = 100)
@@ -190,7 +211,7 @@ mapWorld %>%
 
 # join data from `mapWorld` to `wdi_data`
 mymap <- wdi_data %>%
-  filter(time == 2018) %>%
+  filter(time == 2019) %>%
   mutate(country = recode(country,
                           "Bahamas, The" = "Bahamas",
                           "Brunei Darussalam" = "Brunei",
@@ -234,7 +255,7 @@ mymap %>%
   # change the wdi color gradient
   scale_fill_gradient(low = "white", high = "blue") +
   # change the graph labels
-  labs(fill = "Life Expectancy" ,title = "Life Expectancy in 2018", 
+  labs(fill = "Life Expectancy" ,title = "Average Life Expectancy per Country in 2019", 
        x ="Longitude", y ="Latitude") +
   coord_fixed()
 
@@ -245,7 +266,11 @@ wdi_data %>%
   ggplot(aes(x = gdp_per_capita, y = life_expectancy)) +
   geom_point() +
   geom_smooth(method = "loess",
-              formula = y ~ x)
+              formula = y ~ x) +
+  # Add labels
+  xlab("GDP per capita, PPP (current international $)") +
+  ylab("Life expectancy at birth, total (years)") +
+  ggtitle("Life Expectancy versus GDP per Capita")
 
 # create a bar graph of gender equality per country in 2018
 wdi_data %>%
@@ -267,7 +292,7 @@ wdi_data %>%
   ylab("Average CO2 Emissions (metric tons per capita)")
 
 wdi_data %>%
-  filter(time == 2022) %>%
+  filter(time == 2019) %>%
   ggplot(aes(gdp_per_capita)) +
   geom_histogram()
 
@@ -307,5 +332,16 @@ wdi_regions %>%
   filter(country != "World") %>%
   drop_na(poverty_gap) %>%
   ggplot(aes(x = time, y = poverty_gap)) +
+  geom_line() +
+  facet_wrap(~country) +
+  # Add labels
+  xlab("Year") +
+  ylab("Poverty gap at $2.15 a day (2017 PPP) (%)") +
+  ggtitle("Poverty Gap Over Time by Region")
+
+wdi_regions %>%
+  filter(country != "World") %>%
+  drop_na(birth_rate) %>%
+  ggplot(aes(x = time, y = birth_rate)) +
   geom_line() +
   facet_wrap(~country)
